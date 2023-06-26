@@ -1,1 +1,1 @@
-path=/home/orche/Pictures/wallpapers/
+path=<your_path_here>
