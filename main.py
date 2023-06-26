@@ -1,16 +1,32 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
+import os
+import os.path
+from PIL import Image
 
 
-# Press the green button in the gutter to run the script.
+def convertImage(path, newType):
+    im = Image.open(path).convert('RGB')
+    im.save(path, 'jpeg')
+    print(f'converted {path} to {newType}')
+
+def getWallpapersPath(configFile):
+    with open(configFile) as f:
+        lines = f.readline()
+        return lines.split('=')[1].rstrip()
+
+
+def main():
+    path = getWallpapersPath('config.txt')
+
+    directory = os.fsencode(path)
+
+    for file in os.listdir(directory):
+        filename = os.fsdecode(file)
+        if filename.endswith(".webp"):
+            convertImage(os.path.join(directory.decode(), filename), 'jpeg')
+            filename_without_type = filename.split('.')[0]
+            file_path = os.path.join(directory.decode(), filename)
+            new_file_path = os.path.join(directory.decode(), filename_without_type + '.jpeg')
+            os.rename(file_path, new_file_path)
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
